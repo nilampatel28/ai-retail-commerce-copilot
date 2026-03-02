@@ -1,0 +1,54 @@
+{
+  "generated_at": "2026-03-02 14:05:59",
+  "data_period": {
+    "start_date": "2025-12-02",
+    "end_date": "2026-03-02",
+    "days": 90
+  },
+  "products": {
+    "total_skus": 50,
+    "categories": [
+      "Electronics",
+      "Clothing",
+      "Food",
+      "Home",
+      "Beauty"
+    ],
+    "locations": [
+      "Store-NYC",
+      "Store-LA",
+      "Store-CHI",
+      "Store-HOU",
+      "Store-PHX"
+    ]
+  },
+  "sales": {
+    "total_transactions": 22500,
+    "total_revenue": 167774731.87,
+    "avg_transaction_value": 7456.65,
+    "total_units_sold": 1812284
+  },
+  "inventory": {
+    "total_records": 250,
+    "stockout_risk_high": 18,
+    "stockout_risk_medium": 10,
+    "overstock": 30,
+    "normal": 192
+  },
+  "alerts": {
+    "total_active": 58,
+    "stockout_alerts": 28,
+    "overstock_alerts": 30
+  },
+  "forecasts": {
+    "total_forecasts": 7500,
+    "forecast_horizon_days": 30,
+    "avg_confidence": 0.85
+  },
+  "recommendations": {
+    "total_recommendations": 20,
+    "pending": 20,
+    "avg_confidence": 0.86,
+    "total_potential_revenue_impact": 105966.03
+  }
+}
