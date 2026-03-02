@@ -8,12 +8,19 @@ import boto3
 import pandas as pd
 import json
 from datetime import datetime, timedelta
+from decimal import Decimal
 import sys
 
 print("🚀 Loading data into DynamoDB...")
 
 # Initialize DynamoDB client
 dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+
+def convert_float_to_decimal(obj):
+    """Convert float to Decimal for DynamoDB"""
+    if isinstance(obj, float):
+        return Decimal(str(obj))
+    return obj
 
 try:
     # ========================================================================
@@ -32,11 +39,11 @@ try:
                 'sku': str(row['sku']),
                 'forecast_date': str(row['forecast_date']),
                 'location': str(row['location']),
-                'forecasted_demand': float(row['forecasted_demand']),
-                'confidence_p10': float(row['confidence_p10']),
-                'confidence_p50': float(row['confidence_p50']),
-                'confidence_p90': float(row['confidence_p90']),
-                'confidence_score': float(row['confidence_score']),
+                'forecasted_demand': convert_float_to_decimal(row['forecasted_demand']),
+                'confidence_p10': convert_float_to_decimal(row['confidence_p10']),
+                'confidence_p50': convert_float_to_decimal(row['confidence_p50']),
+                'confidence_p90': convert_float_to_decimal(row['confidence_p90']),
+                'confidence_score': convert_float_to_decimal(row['confidence_score']),
                 'model_version': str(row['model_version']),
                 'generated_at': str(row['generated_at']),
                 'ttl': ttl
@@ -60,12 +67,12 @@ try:
                 'recommendation_id': str(row['recommendation_id']),
                 'sku': str(row['sku']),
                 'type': str(row['type']),
-                'current_price': float(row['current_price']),
-                'recommended_price': float(row['recommended_price']),
-                'price_change_percent': float(row['price_change_percent']),
-                'confidence_score': float(row['confidence_score']),
-                'estimated_revenue_impact': float(row['estimated_revenue_impact']),
-                'estimated_margin_impact': float(row['estimated_margin_impact']),
+                'current_price': convert_float_to_decimal(row['current_price']),
+                'recommended_price': convert_float_to_decimal(row['recommended_price']),
+                'price_change_percent': convert_float_to_decimal(row['price_change_percent']),
+                'confidence_score': convert_float_to_decimal(row['confidence_score']),
+                'estimated_revenue_impact': convert_float_to_decimal(row['estimated_revenue_impact']),
+                'estimated_margin_impact': convert_float_to_decimal(row['estimated_margin_impact']),
                 'explanation': str(row['explanation']),
                 'top_factors': str(row['top_factors']),
                 'status': str(row['status']),
@@ -93,7 +100,7 @@ try:
                 'sku': str(row['sku']),
                 'location': str(row['location']),
                 'current_inventory': int(row['current_inventory']),
-                'days_of_supply': float(row['days_of_supply']),
+                'days_of_supply': convert_float_to_decimal(row['days_of_supply']),
                 'recommended_action': str(row['recommended_action']),
                 'created_at': str(row['created_at']),
                 'status': str(row['status']),
@@ -105,7 +112,7 @@ try:
                 item['estimated_stockout_date'] = str(row['estimated_stockout_date'])
             elif row['type'] == 'overstock':
                 item['excess_quantity'] = int(row['excess_quantity'])
-                item['carrying_cost_monthly'] = float(row['carrying_cost_monthly'])
+                item['carrying_cost_monthly'] = convert_float_to_decimal(row['carrying_cost_monthly'])
             
             batch.put_item(Item=item)
     

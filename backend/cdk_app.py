@@ -165,7 +165,7 @@ class RetailBrainStack(Stack):
             function_name="RetailBrain-QueryHandler",
             runtime=lambda_.Runtime.PYTHON_3_11,
             handler="query_handler.lambda_handler",
-            code=lambda_.Code.from_asset("backend"),
+            code=lambda_.Code.from_asset("lambda"),
             timeout=Duration.seconds(30),
             memory_size=512,
             environment={
@@ -173,8 +173,7 @@ class RetailBrainStack(Stack):
                 "RECOMMENDATIONS_TABLE": recommendations_table.table_name,
                 "ALERTS_TABLE": alerts_table.table_name,
                 "CONVERSATION_TABLE": conversations_table.table_name,
-                "DATA_BUCKET": data_bucket.bucket_name,
-                "AWS_REGION": self.region
+                "DATA_BUCKET": data_bucket.bucket_name
             }
         )
         

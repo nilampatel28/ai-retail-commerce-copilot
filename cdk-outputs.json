@@ -1,0 +1,9 @@
+{
+  "RetailBrainStack": {
+    "RetailBrainAPIEndpoint2EF1E8BF": "https://au9tcxurp4.execute-api.us-east-1.amazonaws.com/prod/",
+    "UserPoolClientId": "1coc3d5stv0pr1ua3lta9idop2",
+    "UserPoolId": "us-east-1_7vla7DTpD",
+    "ApiUrl": "https://au9tcxurp4.execute-api.us-east-1.amazonaws.com/prod/",
+    "DataBucketName": "retailbrain-data-841162669018"
+  }
+}
