@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RetailBrain Copilot - Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-blue-600">🧠 RetailBrain Copilot</h1>
+            <div class="flex items-center gap-4">
+                <span class="text-sm text-gray-600">demo@retailbrain.com</span>
+                <button class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+                    Sign Out
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bg-white border-b">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex gap-4">
+                <button onclick="showTab('chat')" id="chatTab" 
+                    class="px-4 py-3 border-b-2 border-blue-500 text-blue-600">
+                    💬 Chat
+                </button>
+                <button onclick="showTab('dashboard')" id="dashboardTab"
+                    class="px-4 py-3 text-gray-600 hover:text-blue-600">
+                    📊 Dashboard
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 py-6">
+        <!-- Chat Interface -->
+        <div id="chatContent" class="bg-white rounded-lg shadow-lg h-[600px] flex flex-col">
+            <!-- Messages -->
+            <div class="flex-1 overflow-y-auto p-4 space-y-4" id="messages">
+                <div class="text-center text-gray-500 mt-8">
+                    <p class="text-lg mb-4">👋 Hi! I'm your RetailBrain Copilot.</p>
+                    <p>Ask me about demand forecasts, pricing, inventory, or alerts.</p>
+                    <div class="mt-6 space-y-2">
+                        <p class="text-sm font-semibold">Try these:</p>
+                        <button onclick="setQuery('What is the demand forecast for SKU-001?')"
+                            class="block w-full max-w-md mx-auto px-4 py-2 text-sm bg-blue-50 hover:bg-blue-100 rounded text-left">
+                            What is the demand forecast for SKU-001?
+                        </button>
+                        <button onclick="setQuery('Which SKUs are at risk of stockout?')"
+                            class="block w-full max-w-md mx-auto px-4 py-2 text-sm bg-blue-50 hover:bg-blue-100 rounded text-left">
+                            Which SKUs are at risk of stockout?
+                        </button>
+                        <button onclick="setQuery('Show me pricing recommendations')"
+                            class="block w-full max-w-md mx-auto px-4 py-2 text-sm bg-blue-50 hover:bg-blue-100 rounded text-left">
+                            Show me pricing recommendations
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input -->
+            <div class="border-t p-4">
+                <div class="flex gap-2">
+                    <input type="text" id="queryInput" 
+                        placeholder="Ask me anything about your retail data..."
+                        class="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        onkeypress="if(event.key==='Enter') sendQuery()">
+                    <button onclick="sendQuery()"
+                        class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                        Send
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard -->
+        <div id="dashboardContent" class="hidden space-y-6">
+            <!-- Metrics Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <p class="text-sm text-gray-600">Total SKUs</p>
+                    <p class="text-3xl font-bold text-blue-600">50</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <p class="text-sm text-gray-600">Active Alerts</p>
+                    <p class="text-3xl font-bold text-red-600">58</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <p class="text-sm text-gray-600">Recommendations</p>
+                    <p class="text-3xl font-bold text-green-600">20</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <p class="text-sm text-gray-600">Forecast Accuracy</p>
+                    <p class="text-3xl font-bold text-purple-600">85%</p>
+                </div>
+            </div>
+
+            <!-- Alerts -->
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h2 class="text-xl font-bold mb-4">⚠️ Active Alerts</h2>
+                <div class="space-y-2">
+                    <div class="border-l-4 border-red-500 pl-4 py-2">
+                        <p class="font-semibold">SKU-001 - Store-NYC</p>
+                        <p class="text-sm text-gray-600">Replenish 500 units</p>
+                        <p class="text-xs text-gray-500">2.5 days of supply remaining</p>
+                    </div>
+                    <div class="border-l-4 border-orange-500 pl-4 py-2">
+                        <p class="font-semibold">SKU-015 - Store-LA</p>
+                        <p class="text-sm text-gray-600">Replenish 300 units</p>
+                        <p class="text-xs text-gray-500">5.2 days of supply remaining</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recommendations -->
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h2 class="text-xl font-bold mb-4">💡 Pricing Recommendations</h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b">
+                                <th class="text-left py-2">SKU</th>
+                                <th class="text-left py-2">Current Price</th>
+                                <th class="text-left py-2">Recommended</th>
+                                <th class="text-left py-2">Impact</th>
+                                <th class="text-left py-2">Confidence</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b">
+                                <td class="py-2">SKU-025</td>
+                                <td class="py-2">$89.99</td>
+                                <td class="py-2">$94.99</td>
+                                <td class="py-2 text-green-600">+$5,234</td>
+                                <td class="py-2">87%</td>
+                            </tr>
+                            <tr class="border-b">
+                                <td class="py-2">SKU-042</td>
+                                <td class="py-2">$45.00</td>
+                                <td class="py-2">$39.99</td>
+                                <td class="py-2 text-green-600">+$3,120</td>
+                                <td class="py-2">92%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function showTab(tab) {
+            const chatContent = document.getElementById('chatContent');
+            const dashboardContent = document.getElementById('dashboardContent');
+            const chatTab = document.getElementById('chatTab');
+            const dashboardTab = document.getElementById('dashboardTab');
+
+            if (tab === 'chat') {
+                chatContent.classList.remove('hidden');
+                dashboardContent.classList.add('hidden');
+                chatTab.className = 'px-4 py-3 border-b-2 border-blue-500 text-blue-600';
+                dashboardTab.className = 'px-4 py-3 text-gray-600 hover:text-blue-600';
+            } else {
+                chatContent.classList.add('hidden');
+                dashboardContent.classList.remove('hidden');
+                chatTab.className = 'px-4 py-3 text-gray-600 hover:text-blue-600';
+                dashboardTab.className = 'px-4 py-3 border-b-2 border-blue-500 text-blue-600';
+            }
+        }
+
+        function setQuery(query) {
+            document.getElementById('queryInput').value = query;
+        }
+
+        function sendQuery() {
+            const input = document.getElementById('queryInput');
+            const query = input.value.trim();
+            if (!query) return;
+
+            const messagesDiv = document.getElementById('messages');
+            
+            // Add user message
+            const userMsg = document.createElement('div');
+            userMsg.className = 'flex justify-end';
+            userMsg.innerHTML = `
+                <div class="max-w-[70%] px-4 py-2 rounded-lg bg-blue-500 text-white">
+                    <p>${query}</p>
+                    <p class="text-xs mt-1 opacity-70">${new Date().toLocaleTimeString()}</p>
+                </div>
+            `;
+            messagesDiv.appendChild(userMsg);
+
+            // Clear input
+            input.value = '';
+
+            // Simulate AI response
+            setTimeout(() => {
+                const aiMsg = document.createElement('div');
+                aiMsg.className = 'flex justify-start';
+                
+                let response = '';
+                if (query.toLowerCase().includes('forecast') || query.toLowerCase().includes('sku-001')) {
+                    response = `Based on historical data and seasonal patterns, SKU-001 has a forecasted demand of 1,250 units for next week with 87% confidence. 
+
+Key factors:
+• Strong upward trend (+15% week-over-week)
+• Seasonal peak period approaching
+• Recent promotional effectiveness
+
+Recommendation: Ensure adequate inventory to meet expected demand.`;
+                } else if (query.toLowerCase().includes('stockout') || query.toLowerCase().includes('risk')) {
+                    response = `I've identified 18 SKUs at high risk of stockout:
+
+Top 3 urgent:
+• SKU-001 (Store-NYC): 2.5 days supply - Replenish 500 units
+• SKU-015 (Store-LA): 3.1 days supply - Replenish 300 units  
+• SKU-023 (Store-CHI): 2.8 days supply - Replenish 450 units
+
+These SKUs need immediate attention to prevent lost sales.`;
+                } else if (query.toLowerCase().includes('pricing') || query.toLowerCase().includes('price')) {
+                    response = `I have 20 pricing recommendations ready for review:
+
+Top opportunity - SKU-025:
+• Current price: $89.99
+• Recommended: $94.99 (+5.6%)
+• Estimated impact: +$5,234 revenue, +2.5% margin
+• Confidence: 87%
+
+Key factors:
+• Low inventory (creates scarcity)
+• Strong recent demand (+18%)
+• Competitor pricing supports increase
+
+Would you like to see more recommendations?`;
+                } else {
+                    response = `I understand you're asking about "${query}". 
+
+I can help you with:
+• Demand forecasts for specific SKUs
+• Stockout and overstock alerts
+• Pricing recommendations
+• SKU performance analysis
+
+Could you please be more specific about what you'd like to know?`;
+                }
+
+                aiMsg.innerHTML = `
+                    <div class="max-w-[70%] px-4 py-2 rounded-lg bg-gray-100 text-gray-800">
+                        <p class="whitespace-pre-wrap">${response}</p>
+                        <p class="text-xs mt-1 opacity-70">${new Date().toLocaleTimeString()}</p>
+                    </div>
+                `;
+                messagesDiv.appendChild(aiMsg);
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            }, 1000);
+
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+    </script>
+</body>
+</html>
