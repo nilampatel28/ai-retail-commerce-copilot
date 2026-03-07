@@ -159,12 +159,12 @@ class RetailBrainStack(Stack):
         # Lambda Functions
         # ====================================================================
         
-        # Query Handler Lambda
+        # Query Handler Lambda with Bedrock
         query_handler = lambda_.Function(
             self, "QueryHandler",
             function_name="RetailBrain-QueryHandler",
             runtime=lambda_.Runtime.PYTHON_3_11,
-            handler="query_handler.lambda_handler",
+            handler="bedrock_handler.lambda_handler",
             code=lambda_.Code.from_asset("lambda"),
             timeout=Duration.seconds(30),
             memory_size=512,
@@ -184,11 +184,18 @@ class RetailBrainStack(Stack):
         conversations_table.grant_read_write_data(query_handler)
         data_bucket.grant_read(query_handler)
         
-        # Grant Bedrock permissions
+        # Grant Bedrock permissions for Claude models
         query_handler.add_to_role_policy(
             iam.PolicyStatement(
-                actions=["bedrock:InvokeModel"],
-                resources=["*"]
+                actions=[
+                    "bedrock:InvokeModel",
+                    "bedrock:InvokeModelWithResponseStream"
+                ],
+                resources=[
+                    f"arn:aws:bedrock:{self.region}::foundation-model/anthropic.claude-3-5-sonnet-20240620-v1:0",
+                    f"arn:aws:bedrock:{self.region}::foundation-model/anthropic.claude-3-haiku-20240307-v1:0",
+                    f"arn:aws:bedrock:{self.region}::foundation-model/anthropic.claude-3-sonnet-20240229-v1:0"
+                ]
             )
         )
         

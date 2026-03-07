@@ -20,7 +20,7 @@ ALERTS_TABLE = os.environ.get('ALERTS_TABLE', 'RetailBrain-Alerts')
 CONVERSATION_TABLE = os.environ.get('CONVERSATION_TABLE', 'RetailBrain-Conversations')
 
 # Bedrock model ID
-BEDROCK_MODEL_ID = 'anthropic.claude-3-sonnet-20240229-v1:0'
+BEDROCK_MODEL_ID = 'anthropic.claude-3-haiku-20240307-v1:0'
 
 
 def extract_intent_with_bedrock(query: str, user_context: Dict[str, Any]) -> Dict[str, Any]:
@@ -146,10 +146,12 @@ def get_pricing_recommendations(sku: str = None) -> Dict[str, Any]:
             response = table.query(
                 IndexName='SKUIndex',
                 KeyConditionExpression='sku = :sku',
-                ExpressionAttributeValues={':sku': sku},
                 FilterExpression='#status = :status',
                 ExpressionAttributeNames={'#status': 'status'},
-                ExpressionAttributeValues={':status': 'pending'}
+                ExpressionAttributeValues={
+                    ':sku': sku,
+                    ':status': 'pending'
+                }
             )
         else:
             # Scan for all pending recommendations
@@ -233,15 +235,17 @@ def generate_response_with_bedrock(query: str, data: Dict[str, Any], user_contex
     Generate natural language response using Bedrock.
     """
     
-    role_context = {
-        'merchandiser': 'Focus on assortment decisions and SKU performance insights.',
-        'planner': 'Focus on demand forecasts and inventory optimization insights.',
-        'seller': 'Focus on pricing recommendations and promotional effectiveness insights.'
-    }
-    
-    role_instruction = role_context.get(user_context.get('role', 'planner'), '')
-    
-    prompt = f"""You are an AI retail assistant. Generate a clear, concise response to the user's query.
+    # Fallback: Generate response without Bedrock if there's an error
+    try:
+        role_context = {
+            'merchandiser': 'Focus on assortment decisions and SKU performance insights.',
+            'planner': 'Focus on demand forecasts and inventory optimization insights.',
+            'seller': 'Focus on pricing recommendations and promotional effectiveness insights.'
+        }
+        
+        role_instruction = role_context.get(user_context.get('role', 'planner'), '')
+        
+        prompt = f"""You are an AI retail assistant. Generate a clear, concise response to the user's query.
 
 User Role: {user_context.get('role', 'unknown')}
 Role Context: {role_instruction}
@@ -260,7 +264,6 @@ Generate a natural language response that:
 
 Response:"""
 
-    try:
         response = bedrock_runtime.invoke_model(
             modelId=BEDROCK_MODEL_ID,
             body=json.dumps({
@@ -281,8 +284,50 @@ Response:"""
         return answer.strip()
         
     except Exception as e:
-        print(f"Error generating response: {str(e)}")
-        return f"I found the data you requested, but encountered an error generating the response: {str(e)}"
+        print(f"Error generating response with Bedrock: {str(e)}")
+        # Fallback to simple response
+        return generate_simple_response(query, data, user_context)
+
+
+def generate_simple_response(query: str, data: Dict[str, Any], user_context: Dict[str, Any]) -> str:
+    """
+    Generate a simple response without Bedrock (fallback).
+    """
+    if 'error' in data:
+        return f"I encountered an issue: {data['error']}"
+    
+    # Forecast response
+    if 'forecast_period' in data:
+        return f"""Based on the demand forecast for {data['sku']}:
+
+📊 Forecast Summary:
+• Total forecasted demand (30 days): {data['total_forecasted_demand']} units
+• Average daily demand: {data['avg_daily_demand']} units/day
+• Confidence level: {data['avg_confidence']*100:.1f}%
+
+💡 Recommendation: With an average daily demand of {data['avg_daily_demand']} units, ensure you maintain adequate safety stock to prevent stockouts. Consider ordering {int(data['avg_daily_demand'] * 7)} units for next week's demand."""
+    
+    # Alerts response
+    if 'alerts' in data:
+        stockout = data.get('stockout_count', 0)
+        overstock = data.get('overstock_count', 0)
+        return f"""Current Inventory Alerts:
+
+🚨 {stockout} SKUs at risk of stockout
+📦 {overstock} SKUs with overstock
+
+Total active alerts: {data['total_count']}
+
+Priority actions needed for high-risk items. Review the dashboard for detailed recommendations."""
+    
+    # Recommendations response
+    if 'recommendations' in data:
+        count = data.get('count', 0)
+        return f"""I found {count} pricing recommendations.
+
+These recommendations are based on demand elasticity, competitor pricing, and historical sales patterns. Review each recommendation in the dashboard to see potential revenue impact."""
+    
+    return "I found the data you requested. Please check the dashboard for detailed information."
 
 
 def lambda_handler(event, context):

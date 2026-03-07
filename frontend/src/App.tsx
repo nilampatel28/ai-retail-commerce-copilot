@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Amplify } from 'aws-amplify';
 import { signIn, signOut, getCurrentUser } from 'aws-amplify/auth';
-import awsconfig from './aws-exports';
+import { awsConfig } from './aws-exports';
 import ChatInterface from './components/ChatInterface';
 import Dashboard from './components/Dashboard';
 
-Amplify.configure(awsconfig);
+Amplify.configure(awsConfig);
 
 function App() {
   const [user, setUser] = useState<any>(null);

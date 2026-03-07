@@ -4,7 +4,21 @@ An AI-powered decision assistant system designed to help retail merchandising, p
 
 ## Overview
 
-RetailBrain Copilot transforms complex retail data into clear, explainable, and actionable recommendations through a conversational interface. The system leverages Amazon Bedrock for natural language understanding, SageMaker for custom ML models, and a comprehensive suite of AWS managed services.
+RetailBrain Copilot transforms complex retail data into clear, explainable, and actionable recommendations through a conversational interface.
+
+### 🎯 Complete AWS Serverless Architecture
+
+This application demonstrates a production-ready serverless architecture using **7 core AWS services**:
+
+- **🤖 Amazon Bedrock**: Claude 3 Haiku for natural language understanding and intelligent response generation
+- **⚡ AWS Lambda**: Serverless compute for query processing (Python 3.11, 512MB, <2s response time)
+- **💾 Amazon DynamoDB**: NoSQL database with 4 tables (Forecasts, Recommendations, Alerts, Conversations)
+- **🌐 Amazon API Gateway**: RESTful API with Cognito authorization and CORS support
+- **🔐 Amazon Cognito**: User authentication, JWT tokens, and role-based access control
+- **📦 Amazon S3**: Static website hosting for React frontend + data lake for analytics
+- **🏗️ AWS CDK**: Infrastructure as Code for repeatable, version-controlled deployments
+
+**📖 See [AWS-SERVICES-GUIDE.md](AWS-SERVICES-GUIDE.md) for detailed architecture, data flow, and integration patterns.**
 
 ## Key Features
 

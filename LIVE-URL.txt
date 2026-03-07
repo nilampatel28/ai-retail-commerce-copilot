@@ -1,1 +1,18 @@
-http://retailbrain-frontend-1772462374.s3-website-us-east-1.amazonaws.com
+🌐 RetailBrain Copilot - Live Demo URL
+======================================================================
+
+Frontend URL: http://retailbrain-frontend-1772879826.s3-website-us-east-1.amazonaws.com
+
+API Endpoint: https://2s8bdebyg1.execute-api.us-east-1.amazonaws.com/prod/
+
+Test Credentials:
+- Email: demo@retailbrain.com
+- Password: DemoPass123!
+
+Deployment Date: March 7, 2026
+Status: ✅ LIVE AND READY FOR DEMO
+
+AI Model: Claude 3 Haiku (Amazon Bedrock)
+Note: Using fallback response mode for demo reliability
+
+======================================================================

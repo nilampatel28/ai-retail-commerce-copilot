@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { fetchAuthSession } from 'aws-amplify/auth';
+import { apiEndpoint } from '../aws-exports';
 
 interface Message {
   id: string;
@@ -48,7 +49,7 @@ const ChatInterface: React.FC = () => {
       const session = await fetchAuthSession();
       const idToken = session.tokens?.idToken?.toString();
 
-      const response = await fetch('https://au9tcxurp4.execute-api.us-east-1.amazonaws.com/prod/api/v1/query', {
+      const response = await fetch(`${apiEndpoint}/query`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
