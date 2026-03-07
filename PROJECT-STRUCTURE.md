@@ -109,15 +109,6 @@ This will:
 4. Build and deploy frontend
 5. Output live URLs
 
-## Documentation
-
-All detailed documentation is in the `docs/` folder (not pushed to GitHub for security):
-- Demo speaker notes
-- AWS services integration guide
-- Bedrock usage verification
-- Security checklist
-- Deployment guides
-
 ## Security
 
 - All sensitive files are excluded via `.gitignore`
