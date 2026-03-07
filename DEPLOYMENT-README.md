@@ -1,13 +1,5 @@
 # Deployment Guide
 
-## Security Notice
-
-This repository does NOT contain:
-- ❌ AWS account numbers
-- ❌ API endpoints
-- ❌ Cognito User Pool IDs
-- ❌ Demo passwords
-- ❌ Any deployment-specific credentials
 
 All sensitive configuration is generated during deployment and stored locally only.
 
