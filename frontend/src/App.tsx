@@ -10,8 +10,8 @@ Amplify.configure(awsConfig);
 function App() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [email, setEmail] = useState('demo@retailbrain.com');
-  const [password, setPassword] = useState('DemoPass123!');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState<'chat' | 'dashboard'>('chat');
 
@@ -115,8 +115,8 @@ function App() {
           </form>
 
           <div className="mt-6 pt-6 border-t border-gray-200">
-            <p className="text-sm text-gray-600 text-center">Demo Credentials:</p>
-            <p className="text-xs text-gray-500 text-center mt-1">demo@retailbrain.com / DemoPass123!</p>
+            <p className="text-sm text-gray-600 text-center">Demo Account</p>
+            <p className="text-xs text-gray-500 text-center mt-1">Contact admin for credentials</p>
           </div>
         </div>
       </div>

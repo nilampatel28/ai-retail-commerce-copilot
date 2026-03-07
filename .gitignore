@@ -57,10 +57,20 @@ test-*.json
 credentials
 config
 
+# AWS Configuration (generated from deployment)
+frontend/src/aws-exports.ts
+
 # Deployment artifacts
 backend/function.zip
 frontend/dist/
 frontend/node_modules/
+
+# Deployment scripts with credentials
+deploy.sh
+scripts/deploy_with_bedrock.sh
+scripts/deploy_bedrock_app.py
+scripts/create_cognito_user.sh
+scripts/test_api.py
 
 # Documentation with sensitive info (keep local only)
 LIVE-URL.txt
